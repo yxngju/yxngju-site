@@ -1,193 +1,284 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>yxngju</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Vazirmatn:wght@400;600;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#131417;--hi:#26282e;--lo:#16171b;--edge:#3a3d46;--text:#d7d9e0;--soft:#8c909c;--purple:#a259ff;--pd:rgba(162,89,255,.14);--red:#ff3b52}
+:root{
+  --bg:#0e0f12; --panel:#17181d; --panel2:#1e2027; --edge:#2a2c34;
+  --text:#e9eaef; --soft:#8c8f9c; --accent:#a259ff; --accent2:#ff3b52; --money:#2ecf7a;
+}
 *{box-sizing:border-box;margin:0}
-html{scroll-behavior:smooth;scroll-padding-top:70px}
-body{background:var(--bg);color:var(--text);min-height:100vh;font-family:"JetBrains Mono","Vazirmatn",Tahoma,monospace;line-height:1.9}
-body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.025) 0 1px,transparent 1px 3px)}
-a{color:inherit}
-:focus-visible{outline:2px solid var(--purple);outline-offset:3px}
-#rain{position:fixed;inset:0;z-index:0}
+body{background:var(--bg);color:var(--text);font-family:"Inter",sans-serif;min-height:100vh;display:flex}
+a{color:inherit;text-decoration:none}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-thumb{background:var(--edge);border-radius:8px}
 
-header{position:fixed;top:0;left:0;right:0;z-index:20;height:54px;display:flex;justify-content:space-between;align-items:center;direction:ltr;padding:0 14px;background:rgba(19,20,23,.82);backdrop-filter:blur(8px);border-bottom:1px solid var(--edge)}
-.btn{font:inherit;font-size:.9rem;cursor:pointer;color:var(--text);background:none;border:1px solid var(--edge);border-radius:6px;padding:4px 14px;text-decoration:none}
-.btn:hover{border-color:var(--purple);color:var(--purple)}
-.btn.sup{border-color:var(--red);color:var(--red)}
-.btn.sup:hover{background:var(--red);color:#1a0509}
-.ticker{position:fixed;top:54px;left:0;right:0;z-index:19;overflow:hidden;white-space:nowrap;direction:ltr;background:var(--purple);color:#120a1f;font-size:.72rem;font-weight:700;height:20px;line-height:20px}
-.ticker span{display:inline-block;padding-left:100%;animation:tick 28s linear infinite}
-@keyframes tick{to{transform:translateX(-100%)}}
+/* ===== sidebar ===== */
+#sidebar{
+  width:220px;flex:none;background:var(--panel);border-right:1px solid var(--edge);
+  display:flex;flex-direction:column;padding:20px 14px;position:sticky;top:0;height:100vh;z-index:20;
+  transition:transform .25s;
+}
+.logo{font-weight:900;font-size:1.3rem;padding:6px 10px 24px;letter-spacing:.02em}
+.logo span{color:var(--accent)}
+nav{display:flex;flex-direction:column;gap:4px}
+nav button{
+  all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;padding:11px 12px;
+  border-radius:10px;color:var(--soft);font-weight:600;font-size:.95rem;
+}
+nav button:hover{background:var(--panel2);color:var(--text)}
+nav button.active{background:var(--accent);color:#fff}
+nav button .ic{width:20px;text-align:center;font-size:1.05rem}
+.side-foot{margin-top:auto;padding:10px;color:var(--soft);font-size:.8rem}
+.side-foot a{color:var(--accent)}
 
-#veil{position:fixed;inset:0;z-index:25;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .25s}
-#panel{position:fixed;top:0;left:0;bottom:0;width:min(280px,82vw);z-index:30;transform:translateX(-102%);transition:transform .28s ease;background:linear-gradient(160deg,var(--hi),var(--lo));border-right:1px solid var(--edge);padding:18px 14px;display:flex;flex-direction:column;gap:6px;box-shadow:20px 0 60px rgba(0,0,0,.5)}
-body.open #panel{transform:none}
-body.open #veil{opacity:1;pointer-events:auto}
-#panel h2{direction:ltr;font-size:1.1rem;color:var(--purple);padding:6px 10px 14px;border-bottom:1px solid var(--edge);margin-bottom:8px}
-#panel a{display:flex;justify-content:space-between;gap:10px;text-decoration:none;padding:10px 12px;border-radius:8px}
-#panel a small{direction:ltr;color:var(--soft)}
-#panel a:hover{background:var(--pd);color:var(--purple)}
-#panel p{margin-top:auto;color:var(--soft);font-size:.8rem;padding:0 10px}
+/* ===== main ===== */
+#main{flex:1;min-width:0}
+header.top{
+  position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;
+  padding:16px 28px;border-bottom:1px solid var(--edge);background:rgba(14,15,18,.85);backdrop-filter:blur(8px);
+}
+#menuToggle{display:none}
+header.top h1{font-size:1.15rem;font-weight:700}
+#clock{color:var(--soft);font-family:"JetBrains Mono",monospace;font-size:.85rem}
+.content{padding:28px;max-width:1000px}
+.view{display:none}
+.view.active{display:block}
 
-.wrap{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:96px 16px 60px}
-.term{background:linear-gradient(160deg,var(--hi),var(--lo) 60%);border:1px solid var(--edge);border-radius:12px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 60px rgba(162,89,255,.12)}
-.bar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--edge);background:rgba(255,255,255,.03);direction:ltr;color:var(--soft);font-size:.85rem}
-.dot{width:12px;height:12px;border-radius:50%;background:#55585f}.dot.r{background:var(--red)}.dot.p{background:var(--purple)}
-.bar span{margin-left:10px}
-.body{padding:28px clamp(16px,4vw,36px) 36px}
-.prompt{direction:ltr;text-align:left;color:var(--soft);font-size:.95rem;margin-bottom:8px}
-.prompt b{color:var(--purple)}.prompt i{color:var(--red);font-style:normal}
-.block{margin-top:46px}
-h1{position:relative;direction:ltr;text-align:left;font-size:clamp(2.8rem,13vw,5.6rem);font-weight:700;line-height:1.15;color:#f3eaff;text-shadow:0 0 28px rgba(162,89,255,.65)}
-h1::before,h1::after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;overflow:hidden;text-shadow:none}
-h1::before{color:var(--red);animation:gl1 3.2s infinite steps(1)}
-h1::after{color:var(--purple);animation:gl2 3.2s infinite steps(1)}
-@keyframes gl1{0%,90%,100%{clip-path:inset(0 0 100% 0)}92%{clip-path:inset(20% 0 55% 0);transform:translateX(-6px)}96%{clip-path:inset(60% 0 10% 0);transform:translateX(5px)}}
-@keyframes gl2{0%,89%,100%{clip-path:inset(0 0 100% 0)}91%{clip-path:inset(45% 0 30% 0);transform:translateX(6px)}95%{clip-path:inset(5% 0 75% 0);transform:translateX(-5px)}}
-.bio{margin-top:14px;font-size:1.1rem;min-height:3.8em}
-.cursor{display:inline-block;width:.6em;height:1.1em;background:var(--red);vertical-align:text-bottom;margin-inline:4px;animation:blink 1s steps(1) infinite}
-@keyframes blink{50%{opacity:0}}
-.item{display:block;text-decoration:none;padding:16px 12px;margin:0 -12px;border-top:1px dashed var(--edge);border-radius:6px}
-a.item:hover{background:var(--pd)}a.item:hover h3{color:var(--purple)}
-.item h3{font-size:1.1rem;font-weight:600}.item p{color:var(--soft);font-size:.95rem}
-.tag{color:var(--red);font-size:.85rem;font-weight:700}
-.empty{color:var(--soft);padding:14px 0;border-top:1px dashed var(--edge)}
-.links{display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:12px}
-.links a{color:var(--purple);text-decoration-color:var(--red);text-underline-offset:5px}.links a:hover{color:var(--red)}
-footer{margin-top:44px;color:var(--soft);font-size:.85rem}
-.soon{color:var(--soft);border:1px dashed var(--edge);border-radius:8px;padding:14px 16px;font-size:.92rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:18px}
+.card{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:18px}
+.card h3{font-size:.95rem;color:var(--soft);font-weight:600;margin-bottom:8px}
+.card .big{font-size:1.6rem;font-weight:800}
+.bio{color:var(--soft);max-width:48em;line-height:1.8;margin-top:6px}
 
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.cursor,h1::before,h1::after,.ticker span{animation:none}}
+.item{display:block;padding:14px;margin:0 -6px;border-radius:10px}
+a.item:hover{background:var(--panel2)}
+.item h4{font-size:1rem}
+.item p{color:var(--soft);font-size:.9rem}
+.tag{color:var(--accent);font-size:.78rem;font-weight:700}
+.empty{color:var(--soft);padding:10px 0}
+
+.links{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:10px}
+.links a{color:var(--accent);font-weight:600}
+.links a:hover{color:var(--accent2)}
+
+/* soon */
+.soon{border:1.5px dashed var(--edge);border-radius:14px;padding:28px;text-align:center;color:var(--soft)}
+.soon b{color:var(--text)}
+
+/* chat */
+#chatBox{height:360px;overflow-y:auto;background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:75%;padding:10px 14px;border-radius:12px;font-size:.92rem;line-height:1.6}
+.msg.user{align-self:flex-end;background:var(--accent);color:#fff}
+.msg.bot{align-self:flex-start;background:var(--panel2);color:var(--text)}
+.msg.err{align-self:flex-start;background:rgba(255,59,82,.15);color:var(--accent2)}
+#chatRow{display:flex;gap:10px;margin-top:12px}
+#chatInput{flex:1;background:var(--panel);border:1px solid var(--edge);color:var(--text);border-radius:10px;padding:12px 14px;font:inherit}
+#chatSend{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:0 20px;font-weight:700;cursor:pointer}
+.note{color:var(--soft);font-size:.82rem;margin-top:10px}
+
+/* prices */
+.price-row{display:flex;justify-content:space-between;align-items:center;padding:14px 4px;border-top:1px solid var(--edge)}
+.price-row:first-child{border-top:none}
+.price-row .name{font-weight:600}
+.price-row .val{font-family:"JetBrains Mono",monospace;font-weight:700}
+.price-row .up{color:var(--money)}.price-row .down{color:var(--accent2)}
+#priceUpdated{color:var(--soft);font-size:.8rem;margin-top:10px}
+
+@media(max-width:820px){
+  #sidebar{position:fixed;left:0;top:0;transform:translateX(-100%)}
+  #sidebar.open{transform:none}
+  #menuToggle{display:block;background:none;border:1px solid var(--edge);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem}
+  .content{padding:18px}
+}
 </style>
 </head>
 <body>
-<canvas id="rain" aria-hidden="true"></canvas>
 
-<header>
-  <button class="btn" id="menuBtn" aria-expanded="false" aria-controls="panel">☰ منو</button>
-  <a class="btn sup" href="#support">پشتیبانی</a>
-</header>
-<div class="ticker" aria-hidden="true"><span>// NO CAP // STAY SHARP // BUILD LOUD // yxngju was here // NO CAP // STAY SHARP // BUILD LOUD //</span></div>
+<aside id="sidebar">
+  <div class="logo"><span>$</span> yxngju</div>
+  <nav id="nav">
+    <button data-view="home" class="active"><span class="ic">🏠</span>Home</button>
+    <button data-view="chat"><span class="ic">💬</span>Chat Bot</button>
+    <button data-view="music"><span class="ic">🎵</span>Music Bot</button>
+    <button data-view="photo"><span class="ic">🖼️</span>Photo Edit</button>
+    <button data-view="rates"><span class="ic">💲</span>Rates</button>
+  </nav>
+  <div class="side-foot">© <span id="year"></span> <a id="ghLink" href="#" target="_blank">GitHub</a></div>
+</aside>
 
-<div id="veil"></div>
-<nav id="panel" aria-label="منو">
-  <h2>yxngju@site</h2>
-  <a href="#about">درباره من <small>whoami</small></a>
-  <a href="#codes">کدها <small>codes</small></a>
-  <a href="#works">کارها <small>works</small></a>
-  <a href="#comments">کامنت‌ها <small>comments</small></a>
-  <a href="#support">پشتیبانی و تماس <small>support</small></a>
-  <p>نسخه‌ی موبایل بعداً درست می‌شود.</p>
-</nav>
+<div id="main">
+  <header class="top">
+    <button id="menuToggle">☰</button>
+    <h1 id="pageTitle">Home</h1>
+    <span id="clock"></span>
+  </header>
 
-<div class="wrap">
-  <div class="term">
-    <div class="bar"><i class="dot r"></i><i class="dot p"></i><i class="dot"></i><span>yxngju@site: ~</span></div>
-    <div class="body">
-      <div id="about">
-        <div class="prompt"><b>yxngju@site</b>:<i>~</i>$ whoami</div>
-        <h1 id="siteName" data-text="">yxngju</h1>
-        <p class="bio"><span id="bio"></span><span class="cursor" aria-hidden="true"></span></p>
+  <div class="content">
+
+    <section class="view active" id="view-home">
+      <p class="bio" id="bio"></p>
+      <div class="grid">
+        <div class="card"><h3>Codes</h3><div id="codeList"></div></div>
+        <div class="card"><h3>Works</h3><div id="workList"></div></div>
       </div>
-      <div class="block" id="codes">
-        <div class="prompt"><b>yxngju@site</b>:<i>~</i>$ ls codes/</div>
-        <div id="codeList"></div>
-      </div>
-      <div class="block" id="works">
-        <div class="prompt"><b>yxngju@site</b>:<i>~</i>$ ls works/</div>
-        <div id="workList"></div>
-      </div>
-      <div class="block" id="comments">
-        <div class="prompt"><b>yxngju@site</b>:<i>~</i>$ cat comments.log</div>
-        <p class="soon">بخش کامنت‌ها هنوز وصل نشده. بعداً با یک سرویس کامنت (مثل giscus) اینجا فعال می‌شود تا بازدیدکننده‌ها بتوانند نظر بگذارند.</p>
-      </div>
-      <div class="block" id="support">
-        <div class="prompt"><b>yxngju@site</b>:<i>~</i>$ ./support --contact</div>
-        <p id="supText"></p>
+      <div class="card" style="margin-top:16px">
+        <h3>Links</h3>
         <div class="links" id="links"></div>
       </div>
-      <footer>© <span id="year"></span> <span id="footName"></span></footer>
-    </div>
+    </section>
+
+    <section class="view" id="view-chat">
+      <div id="chatBox"></div>
+      <div id="chatRow">
+        <input id="chatInput" placeholder="Type a message..." />
+        <button id="chatSend">Send</button>
+      </div>
+      <p class="note">Connects to a local Groq-powered server at <code>127.0.0.1:5000</code>. It only works while that server is running on this computer — once it's deployed online, it will work for everyone.</p>
+    </section>
+
+    <section class="view" id="view-music">
+      <div class="soon"><b>Music Bot — coming soon.</b><br>Tell me what you want it to do (play music, recommend songs, or generate music) and I'll build it.</div>
+    </section>
+
+    <section class="view" id="view-photo">
+      <div class="soon"><b>Photo Edit — coming soon.</b><br>Picking a free/cheap image-editing API next.</div>
+    </section>
+
+    <section class="view" id="view-rates">
+      <div class="card">
+        <h3>Iran Market — USD / EUR / Gold</h3>
+        <div id="priceList"></div>
+        <p id="priceUpdated"></p>
+      </div>
+      <p class="note">Data from a public free Iranian market API (BrsApi). It may be rate-limited since it uses a shared demo key — a personal free key from brsapi.ir would be more reliable long-term.</p>
+    </section>
+
   </div>
 </div>
 
 <script>
-const $ = id => document.getElementById(id);
-const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const $ = s => document.querySelector(s);
 
-/* ===== شخصی‌سازی ===== */
+/* ===== personalize here ===== */
 const CONFIG = {
-  name: "yxngju",
-  bio: "من yxngju‌ام. کد می‌نویسم، نقاشی می‌کشم و هر چیزی که می‌سازم را اینجا می‌گذارم.",
-  supportText: "سوال یا پیشنهادی داری؟ از یکی از راه‌های زیر پیام بده.",
-  email: "",
+  bio: "I'm yxngju. I write code, make art, and put everything I build here.",
+  github: "https://github.com/yxngju",
   links: [
     { label: "GitHub", url: "https://github.com/yxngju" },
     { label: "Instagram", url: "https://instagram.com/yxngju" },
   ],
   codes: [
-    { title: "سایت شخصی", desc: "همین صفحه‌ای که الان می‌بینی.", tag: "html", url: "https://github.com/yxngju/yxngju-site" },
+    { title: "Personal site", desc: "This website.", tag: "html", url: "https://github.com/yxngju/yxngju-site" },
   ],
   works: [],
 };
-document.title = CONFIG.name;
-$("siteName").textContent = CONFIG.name; $("siteName").dataset.text = CONFIG.name;
-$("footName").textContent = CONFIG.name; $("year").textContent = new Date().getFullYear();
-$("supText").textContent = CONFIG.supportText;
-(function(){const el=$("bio"),t=CONFIG.bio;if(calm){el.textContent=t;return}let i=0;const id=setInterval(()=>{el.textContent=t.slice(0,++i);if(i>=t.length)clearInterval(id)},35)})();
-function fill(id, arr) {
+
+$("#bio").textContent = CONFIG.bio;
+$("#ghLink").href = CONFIG.github;
+$("#year").textContent = new Date().getFullYear();
+
+function fillList(id, arr) {
   const box = $(id);
-  if (!arr.length) { const e = document.createElement("p"); e.className = "empty"; e.textContent = "# هنوز خالیه. به‌زودی."; box.append(e); return; }
+  if (!arr.length) { box.innerHTML = '<p class="empty">Nothing here yet.</p>'; return; }
+  box.innerHTML = "";
   arr.forEach(p => {
-    const el = document.createElement(p.url ? "a" : "div"); el.className = "item";
+    const el = document.createElement(p.url ? "a" : "div");
+    el.className = "item";
     if (p.url) { el.href = p.url; el.target = "_blank"; el.rel = "noopener"; }
-    const t = document.createElement("span"); t.className = "tag"; t.textContent = p.tag ? "[" + p.tag + "]" : "";
-    const h = document.createElement("h3"); h.textContent = p.title;
-    const d = document.createElement("p"); d.textContent = p.desc || "";
-    el.append(t, h, d); box.append(el);
+    el.innerHTML = `<span class="tag">${p.tag ? "["+p.tag+"]" : ""}</span><h4>${p.title}</h4><p>${p.desc || ""}</p>`;
+    box.append(el);
   });
 }
-fill("codeList", CONFIG.codes); fill("workList", CONFIG.works);
-const L = [...CONFIG.links]; if (CONFIG.email) L.push({ label: CONFIG.email, url: "mailto:" + CONFIG.email });
-L.forEach(l => { const a = document.createElement("a"); a.href = l.url; a.textContent = l.label; if (!l.url.startsWith("mailto")) { a.target = "_blank"; a.rel = "noopener"; } $("links").append(a); });
+fillList("#codeList", CONFIG.codes);
+fillList("#workList", CONFIG.works);
+CONFIG.links.forEach(l => {
+  const a = document.createElement("a");
+  a.href = l.url; a.textContent = l.label; a.target = "_blank"; a.rel = "noopener";
+  $("#links").append(a);
+});
 
-/* منو */
-const setMenu = o => { document.body.classList.toggle("open", o); $("menuBtn").setAttribute("aria-expanded", o); };
-$("menuBtn").onclick = () => setMenu(!document.body.classList.contains("open"));
-$("veil").onclick = () => setMenu(false);
-$("panel").querySelectorAll("a").forEach(a => a.onclick = () => setMenu(false));
-addEventListener("keydown", e => { if (e.key === "Escape") setMenu(false); });
+/* ===== nav / views ===== */
+const titles = { home: "Home", chat: "Chat Bot", music: "Music Bot", photo: "Photo Edit", rates: "Rates" };
+document.querySelectorAll("#nav button").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll("#nav button").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+    btn.classList.add("active");
+    $("#view-" + btn.dataset.view).classList.add("active");
+    $("#pageTitle").textContent = titles[btn.dataset.view];
+    $("#sidebar").classList.remove("open");
+  };
+});
+$("#menuToggle").onclick = () => $("#sidebar").classList.toggle("open");
 
-/* باران هکری که با ماوس واکنش نشان می‌دهد */
-const cv = $("rain"), cx = cv.getContext("2d"), M = { x: -999, y: -999 };
-const CH = "アイウエオカキクケコサシスセソ01{}<>/\\$#%&*=+";
-let W, H, cols, drops, spd, trail = [];
-function size() { W = cv.width = innerWidth; H = cv.height = innerHeight; cols = Math.ceil(W / 16); drops = Array.from({ length: cols }, () => Math.random() * H / 16); spd = Array.from({ length: cols }, () => .25 + Math.random() * .5); cx.fillStyle = "#131417"; cx.fillRect(0, 0, W, H); }
-size(); addEventListener("resize", size);
-addEventListener("pointermove", e => { M.x = e.clientX; M.y = e.clientY; if (!calm && Math.random() < .6) trail.push({ x: e.clientX, y: e.clientY, c: CH[Math.random() * CH.length | 0], life: 1 }); });
-addEventListener("pointerdown", e => { if (calm) return; for (let i = 0; i < 14; i++) trail.push({ x: e.clientX, y: e.clientY, c: CH[Math.random() * CH.length | 0], life: 1, vx: (Math.random() - .5) * 8, vy: (Math.random() - .5) * 8 }); });
-function rain() {
-  cx.fillStyle = "rgba(19,20,23,.1)"; cx.fillRect(0, 0, W, H);
-  cx.font = "14px 'JetBrains Mono', monospace";
-  for (let i = 0; i < cols; i++) {
-    const x = i * 16, y = drops[i] * 16, d = Math.hypot(x - M.x, y - M.y), near = d < 150;
-    cx.fillStyle = near ? (Math.random() < .5 ? "#ff3b52" : "#a259ff") : "rgba(162,89,255,.5)";
-    const k = near ? (150 - d) * .35 / (d || 1) : 0;
-    cx.fillText(CH[Math.random() * CH.length | 0], x + (x - M.x) * k, y + (y - M.y) * k);
-    drops[i] += near ? spd[i] * 3 : spd[i];
-    if (y > H && Math.random() > .975) drops[i] = 0;
-  }
-  trail = trail.filter(p => (p.life -= .03) > 0);
-  trail.forEach(p => { p.x += p.vx || 0; p.y += (p.vy || 0) + .3; cx.fillStyle = "rgba(255,59,82," + p.life + ")"; cx.fillText(p.c, p.x, p.y); });
-  requestAnimationFrame(rain);
+/* ===== clock ===== */
+function tickClock() {
+  $("#clock").textContent = new Date().toLocaleTimeString("en-GB");
 }
-if (calm) cv.style.opacity = .25; else rain();
+tickClock(); setInterval(tickClock, 1000);
+
+/* ===== chat bot (Groq via local backend) ===== */
+function addMsg(text, cls) {
+  const d = document.createElement("div");
+  d.className = "msg " + cls;
+  d.textContent = text;
+  $("#chatBox").append(d);
+  $("#chatBox").scrollTop = $("#chatBox").scrollHeight;
+}
+async function sendChat() {
+  const input = $("#chatInput");
+  const text = input.value.trim();
+  if (!text) return;
+  addMsg(text, "user");
+  input.value = "";
+  try {
+    const res = await fetch("http://127.0.0.1:5000/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text })
+    });
+    const data = await res.json();
+    if (data.reply) addMsg(data.reply, "bot");
+    else addMsg("Error: " + (data.error || "unknown"), "err");
+  } catch (e) {
+    addMsg("Could not reach the server. Is it running on this computer?", "err");
+  }
+}
+$("#chatSend").onclick = sendChat;
+$("#chatInput").addEventListener("keydown", e => { if (e.key === "Enter") sendChat(); });
+
+/* ===== prices ===== */
+const BRSAPI_KEY = "FreeSV0E1LSgB9RDjuf0QorSLViX8pPG";
+async function loadPrices() {
+  try {
+    const res = await fetch(`https://Api.BrsApi.ir/Market/Gold_Currency_Pro.php?key=${BRSAPI_KEY}&section=gold,currency`);
+    const data = await res.json();
+    const wanted = { "US Dollar": "usd", "Euro": "eur", "Gold Ounce": "gold" };
+    const rows = [];
+    (data.gold || []).forEach(g => { if (g.name_en && g.name_en.toLowerCase().includes("18")) rows.push(g); });
+    (data.currency || []).forEach(c => { if (["US Dollar", "Euro"].includes(c.name_en)) rows.push(c); });
+
+    const box = $("#priceList");
+    box.innerHTML = "";
+    if (!rows.length) { box.innerHTML = '<p class="empty">No data right now.</p>'; return; }
+    rows.forEach(r => {
+      const up = (r.change_percent || 0) >= 0;
+      const row = document.createElement("div");
+      row.className = "price-row";
+      row.innerHTML = `<span class="name">${r.name_en}</span><span class="val ${up ? "up" : "down"}">${Number(r.price).toLocaleString()} T</span>`;
+      box.append(row);
+    });
+    $("#priceUpdated").textContent = "Updated: " + new Date().toLocaleTimeString("en-GB");
+  } catch (e) {
+    $("#priceList").innerHTML = '<p class="empty">Could not load prices right now.</p>';
+  }
+}
+loadPrices();
+setInterval(loadPrices, 60000);
 </script>
 </body>
 </html>
